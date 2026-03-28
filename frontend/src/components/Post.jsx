@@ -11,7 +11,7 @@ import { LuSendHorizontal } from "react-icons/lu";
 import { io } from "socket.io-client";
 import ConnectionButton from "./ConnectionButton";
 
-let socket = io("http://localhost:8000");
+let socket = io(import.meta.env.VITE_SERVER_URL || "http://localhost:8000");
 function Post({ id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false);
   let { serverUrl } = useContext(authDataContext);
