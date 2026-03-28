@@ -1,0 +1,46 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: linkedin-backend
+    env: node
+    plan: free
+    region: ohio
+    buildCommand: npm install
+    startCommand: npm start
+    rootDir: backend
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: NODE_ENVIRONMENT
+        value: production
+      - key: CORS_ORIGIN
+        fromService:
+          type: static
+          name: linkedin-frontend
+          property: url
+      - key: MONGODB_URL
+        sync: false # You will enter this in the Render UI
+      - key: JWT_SECRET
+        sync: false # You will enter this in the Render UI
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  # Frontend Static Site
+  - type: static
+    name: linkedin-frontend
+    env: static
+    plan: free
+    region: ohio
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    rootDir: frontend
+    envVars:
+      - key: VITE_SERVER_URL
+        fromService:
+          type: web
+          name: linkedin-backend
+          property: url
